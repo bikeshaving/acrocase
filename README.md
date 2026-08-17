@@ -70,25 +70,24 @@ Add project-specific acronyms on top of the built-in dictionary:
 }
 ```
 
-## Auto-fix
+## Why there is no auto-fix
 
-Run `eslint --fix` to correct violations automatically. A fix renames the
-declaration together with every reference to it, so call sites, JSX tags and
-type annotations stay in sync, and shadowed bindings are each renamed only
-within their own scope.
+The rule reports violations and leaves your code alone. It is not fixable, and
+that is deliberate.
 
-Two kinds of name are reported but never rewritten automatically, because the
-references that would need to change are not visible to the rule:
+Renaming an identifier is not a local edit. It means rewriting every reference
+to it, and the references that matter most are the ones a linter cannot see: a
+named export is read by importers in other files, and a property can be reached
+as `o.parseUrl` or `o["parseUrl"]` from anywhere. An autofix that rewrote the
+declaration alone would produce code that still parses and no longer works.
 
-- **Named exports.** Importers live in other files, so renaming one would break
-  them silently. These are reported as errors with no fix and no suggestion.
-  A default export is still fixed, since importers pick their own local name.
-- **Properties and methods.** A property can be read as `o.parseUrl` or
-  `o["parseUrl"]` from anywhere, so the rename is offered as an editor
-  suggestion you apply deliberately rather than as an autofix.
+This follows ESLint's own naming rules. `camelcase`, `id-match`, `id-denylist`
+and `id-length` are all report-only for the same reason. Renaming is a job for
+your editor's rename refactor, which can see the whole project; the rule's
+message tells you the name to use.
 
-Imported names, destructuring keys and computed keys are left alone entirely,
-since those names belong to whoever declared them.
+Names that belong to someone else are not reported at all: imported bindings,
+destructuring keys and computed keys.
 
 ## Dictionary
 

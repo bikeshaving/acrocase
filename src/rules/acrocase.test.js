@@ -11,6 +11,9 @@ const ruleTester = new RuleTester({
   },
 });
 
+const acronym = { messageId: "incorrectAcronym" };
+const exception = { messageId: "incorrectException" };
+
 ruleTester.run("acrocase", rule, {
   valid: [
     // camelCase leading acronyms stay lowercase
@@ -35,253 +38,41 @@ ruleTester.run("acrocase", rule, {
   ],
   invalid: [
     // interior acronyms
-    {
-      code: "const parseUrl = null;",
-      output: "const parseURL = null;",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    {
-      code: "const toJson = () => {};",
-      output: "const toJSON = () => {};",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    {
-      code: "function parseHtml() {}",
-      output: "function parseHTML() {}",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    // leading PascalCase acronyms (regression: previously missed entirely)
-    {
-      code: "class HtmlParser {}",
-      output: "class HTMLParser {}",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    {
-      code: "interface HttpOptions { port: number; }",
-      output: "interface HTTPOptions { port: number; }",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    {
-      code: "type UrlLike = string;",
-      output: "type URLLike = string;",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    {
-      code: "const Url = null;",
-      output: "const URL = null;",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    // multiple violations in one name, including leading position
-    {
-      code: "class HtmlToXmlConverter {}",
-      output: "class HTMLToXMLConverter {}",
-      errors: [
-        { messageId: "incorrectAcronym" },
-        { messageId: "incorrectAcronym" },
-      ],
-    },
+    { code: "const parseUrl = null;", errors: [acronym] },
+    { code: "const toJson = () => {};", errors: [acronym] },
+    { code: "function parseHtml() {}", errors: [acronym] },
+    { code: "class Foo { toXml() {} }", errors: [acronym] },
 
-    // The fix renames references, not just the declaration.
-    {
-      code: "function parseUrl(s) { return s; }\nparseUrl('x');",
-      output: "function parseURL(s) { return s; }\nparseURL('x');",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    {
-      code: "const HtmlBox = () => null;\nconst el = <HtmlBox />;",
-      output: "const HTMLBox = () => null;\nconst el = <HTMLBox />;",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    {
-      code: "type UrlLike = string;\nconst x: UrlLike = 'a';",
-      output: "type URLLike = string;\nconst x: URLLike = 'a';",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    {
-      code: "interface HttpOptions { p: number }\nfunction g(o: HttpOptions) {}",
-      output: "interface HTTPOptions { p: number }\nfunction g(o: HTTPOptions) {}",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    {
-      code: "class HtmlParser {}\nnew HtmlParser();",
-      output: "class HTMLParser {}\nnew HTMLParser();",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    // Each shadowed binding renames only its own scope. The outer binding's
-    // fix spans the inner one, so a single pass applies just the outer rename;
-    // the convergence check below covers the multi-pass result.
-    {
-      code: "const apiUrl = 1;\nfunction f() { const apiUrl = 2; return apiUrl; }\nconsole.log(apiUrl);",
-      output:
-        "const apiURL = 1;\nfunction f() { const apiUrl = 2; return apiUrl; }\nconsole.log(apiURL);",
-      errors: [
-        { messageId: "incorrectAcronym" },
-        { messageId: "incorrectAcronym" },
-      ],
-    },
-    // shorthand expands so the property key keeps its original name
-    {
-      code: "const parseUrl = 1;\nconst o = { parseUrl };",
-      output: "const parseURL = 1;\nconst o = { parseUrl: parseURL };",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    // a default export's local name is private, so it is still fixable
-    {
-      code: "export default class HtmlParser {}",
-      output: "export default class HTMLParser {}",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
+    // leading acronyms (regression: previously missed entirely)
+    { code: "class HtmlParser {}", errors: [acronym] },
+    { code: "interface HttpOptions { port: number; }", errors: [acronym] },
+    { code: "type UrlLike = string;", errors: [acronym] },
+    { code: "const Url = null;", errors: [acronym] },
+    { code: "class HtmlToXmlConverter {}", errors: [acronym, acronym] },
 
-    // A typed identifier's range covers its annotation, so a naive whole-node
-    // replacement silently deletes the type.
-    {
-      code: "function f(apiUrl: string) { return apiUrl; }",
-      output: "function f(apiURL: string) { return apiURL; }",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    {
-      code: "const apiUrl: string = 'x';",
-      output: "const apiURL: string = 'x';",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    {
-      code: "function f(apiUrl?: string) {}",
-      output: "function f(apiURL?: string) {}",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-    {
-      code: "function f(toJson: () => void, other: number) { return toJson; }",
-      output: "function f(toJSON: () => void, other: number) { return toJSON; }",
-      errors: [{ messageId: "incorrectAcronym" }],
-    },
-
-    // Renaming onto a name already in scope would redeclare it or repoint a
-    // reference at the wrong binding: report, but do not rewrite.
-    {
-      code: "const parseUrl = 1;\nconst parseURL = 2;\nconsole.log(parseUrl, parseURL);",
-      output: null,
-      errors: [{ messageId: "incorrectAcronym", suggestions: [] }],
-    },
-    {
-      code: "const parseUrl = 1;\nfunction g() { const parseURL = 2; return parseUrl + parseURL; }",
-      output: null,
-      errors: [{ messageId: "incorrectAcronym", suggestions: [] }],
-    },
-
-    // Named exports are the module's public API: report only, never rewrite.
-    {
-      code: "export function parseUrl() {}\nparseUrl();",
-      output: null,
-      errors: [{ messageId: "incorrectAcronym", suggestions: [] }],
-    },
-    {
-      code: "export const apiUrl = 1;",
-      output: null,
-      errors: [{ messageId: "incorrectAcronym", suggestions: [] }],
-    },
-    {
-      code: "const apiUrl = 1;\nexport { apiUrl };",
-      output: null,
-      errors: [{ messageId: "incorrectAcronym", suggestions: [] }],
-    },
-    {
-      code: "export class HtmlParser {}",
-      output: null,
-      errors: [{ messageId: "incorrectAcronym", suggestions: [] }],
-    },
-    {
-      code: "export interface HttpOptions { p: number }",
-      output: null,
-      errors: [{ messageId: "incorrectAcronym", suggestions: [] }],
-    },
-
-    // Members have references we cannot resolve: suggestion, never an autofix.
-    {
-      code: "const o = { parseUrl: 1 };\nconsole.log(o.parseUrl);",
-      output: null,
-      errors: [
-        {
-          messageId: "incorrectAcronym",
-          suggestions: [
-            {
-              messageId: "renameMember",
-              output: "const o = { parseURL: 1 };\nconsole.log(o.parseUrl);",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: "class A { toXml() {} }\nnew A().toXml();",
-      output: null,
-      errors: [
-        {
-          messageId: "incorrectAcronym",
-          suggestions: [
-            {
-              messageId: "renameMember",
-              output: "class A { toXML() {} }\nnew A().toXml();",
-            },
-          ],
-        },
-      ],
-    },
     // class fields (regression: PropertyDefinition visitor was missing)
-    {
-      code: "class Foo { apiUrl = ''; }",
-      output: null,
-      errors: [
-        {
-          messageId: "incorrectAcronym",
-          suggestions: [
-            { messageId: "renameMember", output: "class Foo { apiURL = ''; }" },
-          ],
-        },
-      ],
-    },
-    {
-      code: "class Foo { HtmlContent = ''; }",
-      output: null,
-      errors: [
-        {
-          messageId: "incorrectAcronym",
-          suggestions: [
-            {
-              messageId: "renameMember",
-              output: "class Foo { HTMLContent = ''; }",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      code: "interface O { parseUrl: string }",
-      output: null,
-      errors: [
-        {
-          messageId: "incorrectAcronym",
-          suggestions: [
-            {
-              messageId: "renameMember",
-              output: "interface O { parseURL: string }",
-            },
-          ],
-        },
-      ],
-    },
+    { code: "class Foo { apiUrl = ''; }", errors: [acronym] },
+    { code: "class Foo { HtmlContent = ''; }", errors: [acronym] },
+
+    // other declaration and member positions
+    { code: "function f(apiUrl: string) { return apiUrl; }", errors: [acronym] },
+    { code: "const o = { parseUrl: 1 };", errors: [acronym] },
+    { code: "interface O { parseUrl: string }", errors: [acronym] },
+    { code: "const HtmlBox = () => null;", errors: [acronym] },
+
+    // exported names are still reported, they just cannot be rewritten
+    { code: "export function parseUrl() {}", errors: [acronym] },
+    { code: "export const apiUrl = 1;", errors: [acronym] },
+    { code: "export class HtmlParser {}", errors: [acronym] },
+    { code: "export interface HttpOptions { p: number }", errors: [acronym] },
+    { code: "export default class HtmlParser {}", errors: [acronym] },
 
     // exceptions: ID is not an acronym, it should be Id
-    {
-      code: "const getUserID = null;",
-      output: "const getUserId = null;",
-      errors: [{ messageId: "incorrectException" }],
-    },
+    { code: "const getUserID = null;", errors: [exception] },
   ],
 });
 
-// RuleTester applies one fix pass. `eslint --fix` runs up to ten, so these
-// check what the user actually ends up with, and that fixing converges to code
-// with no dangling references.
+// The rule must not offer a fix or a suggestion for anything it reports.
 const { Linter } = require("eslint");
 const assert = require("assert");
 
@@ -300,35 +91,29 @@ const config = [
   },
 ];
 
-const convergence = [
-  [
-    "const apiUrl = 1;\nfunction f() { const apiUrl = 2; return apiUrl; }\nconsole.log(apiUrl);",
-    "const apiURL = 1;\nfunction f() { const apiURL = 2; return apiURL; }\nconsole.log(apiURL);",
-  ],
-  [
-    "class HtmlToXmlConverter {}\nnew HtmlToXmlConverter();",
-    "class HTMLToXMLConverter {}\nnew HTMLToXMLConverter();",
-  ],
-  [
-    "function parseUrl(s) { return s; }\nconst toJson = () => parseUrl('x');",
-    "function parseURL(s) { return s; }\nconst toJSON = () => parseURL('x');",
-  ],
-  // JSX closing tags are recorded as references, so both tags rename together
-  // and the fixed output stays parseable.
-  [
-    "const HtmlBox = () => null;\nconst a = <HtmlBox>t</HtmlBox>;",
-    "const HTMLBox = () => null;\nconst a = <HTMLBox>t</HTMLBox>;",
-  ],
+assert.ok(!rule.meta.fixable, "rule must not declare itself fixable");
+assert.ok(!rule.meta.hasSuggestions, "rule must not declare suggestions");
+
+const samples = [
+  "const parseUrl = 1;\nparseUrl();",
+  "class HtmlParser {}\nnew HtmlParser();",
+  "export function parseUrl() {}",
+  "const o = { parseUrl: 1 };",
+  "function f(apiUrl: string) { return apiUrl; }",
 ];
 
-for (const [input, expected] of convergence) {
-  const { output } = linter.verifyAndFix(input, config, "t.tsx");
-  assert.strictEqual(output, expected, `did not converge for:\n${input}`);
-  assert.strictEqual(
-    linter.verify(output, config, "t.tsx").length,
-    0,
-    `fixed output still reports violations:\n${output}`,
-  );
+for (const code of samples) {
+  const messages = linter.verify(code, config, "t.tsx");
+  assert.ok(messages.length > 0, `expected a report for:\n${code}`);
+  for (const message of messages) {
+    assert.ok(!message.fix, `unexpected fix for:\n${code}`);
+    assert.ok(
+      !message.suggestions || message.suggestions.length === 0,
+      `unexpected suggestion for:\n${code}`,
+    );
+  }
+  // Source is left byte-for-byte alone by --fix.
+  assert.strictEqual(linter.verifyAndFix(code, config, "t.tsx").output, code);
 }
 
 console.log("acrocase rule tests passed");
