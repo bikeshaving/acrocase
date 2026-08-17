@@ -172,6 +172,35 @@ module.exports = {
       );
     }
 
+    // Renaming into a name that already exists can break the code two ways:
+    // redeclaring it in the same scope, or letting a nearer binding capture a
+    // reference that used to resolve here. Shadowing a name from an enclosing
+    // scope is not a problem, so the search deliberately stops at the binding's
+    // own scope rather than walking to the top.
+    function isNameTaken(bindings, corrected) {
+      const declares = (scope) =>
+        scope.variables.some((variable) => variable.name === corrected);
+
+      return bindings.some((variable) => {
+        if (declares(variable.scope)) {
+          return true;
+        }
+
+        return variable.references.some((reference) => {
+          for (
+            let scope = reference.from;
+            scope && scope !== variable.scope;
+            scope = scope.upper
+          ) {
+            if (declares(scope)) {
+              return true;
+            }
+          }
+          return false;
+        });
+      });
+    }
+
     // Rename the binding along with every reference to it, so the fix cannot
     // leave call sites pointing at a name that no longer exists.
     function renameBinding(fixer, bindings, corrected) {
@@ -184,6 +213,20 @@ module.exports = {
           return;
         }
         seen.add(key);
+
+        // A typed identifier's range covers its annotation too, so replacing
+        // the whole node would delete `: string` along with the name. Rewrite
+        // only up to where the annotation starts, keeping any `?` marker.
+        if (identifier.typeAnnotation) {
+          fixes.push(
+            fixer.replaceTextRange(
+              [identifier.range[0], identifier.typeAnnotation.range[0]],
+              `${text}${identifier.optional ? "?" : ""}`,
+            ),
+          );
+          return;
+        }
+
         fixes.push(fixer.replaceText(identifier, text));
       }
 
@@ -243,9 +286,9 @@ module.exports = {
           },
         };
 
-        if (exported) {
-          // Importers live in files ESLint is not looking at, so neither a fix
-          // nor a suggestion can be applied safely. Report and leave it alone.
+        if (exported || (bindings.length > 0 && isNameTaken(bindings, corrected))) {
+          // No safe rename. Either importers live in files ESLint is not
+          // looking at, or the corrected name is already in scope. Report only.
         } else if (bindings.length > 0) {
           report.fix = (fixer) => renameBinding(fixer, bindings, corrected);
         } else {

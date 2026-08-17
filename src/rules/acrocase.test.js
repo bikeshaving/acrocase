@@ -132,6 +132,42 @@ ruleTester.run("acrocase", rule, {
       errors: [{ messageId: "incorrectAcronym" }],
     },
 
+    // A typed identifier's range covers its annotation, so a naive whole-node
+    // replacement silently deletes the type.
+    {
+      code: "function f(apiUrl: string) { return apiUrl; }",
+      output: "function f(apiURL: string) { return apiURL; }",
+      errors: [{ messageId: "incorrectAcronym" }],
+    },
+    {
+      code: "const apiUrl: string = 'x';",
+      output: "const apiURL: string = 'x';",
+      errors: [{ messageId: "incorrectAcronym" }],
+    },
+    {
+      code: "function f(apiUrl?: string) {}",
+      output: "function f(apiURL?: string) {}",
+      errors: [{ messageId: "incorrectAcronym" }],
+    },
+    {
+      code: "function f(toJson: () => void, other: number) { return toJson; }",
+      output: "function f(toJSON: () => void, other: number) { return toJSON; }",
+      errors: [{ messageId: "incorrectAcronym" }],
+    },
+
+    // Renaming onto a name already in scope would redeclare it or repoint a
+    // reference at the wrong binding: report, but do not rewrite.
+    {
+      code: "const parseUrl = 1;\nconst parseURL = 2;\nconsole.log(parseUrl, parseURL);",
+      output: null,
+      errors: [{ messageId: "incorrectAcronym", suggestions: [] }],
+    },
+    {
+      code: "const parseUrl = 1;\nfunction g() { const parseURL = 2; return parseUrl + parseURL; }",
+      output: null,
+      errors: [{ messageId: "incorrectAcronym", suggestions: [] }],
+    },
+
     // Named exports are the module's public API: report only, never rewrite.
     {
       code: "export function parseUrl() {}\nparseUrl();",
@@ -276,6 +312,12 @@ const convergence = [
   [
     "function parseUrl(s) { return s; }\nconst toJson = () => parseUrl('x');",
     "function parseURL(s) { return s; }\nconst toJSON = () => parseURL('x');",
+  ],
+  // JSX closing tags are recorded as references, so both tags rename together
+  // and the fixed output stays parseable.
+  [
+    "const HtmlBox = () => null;\nconst a = <HtmlBox>t</HtmlBox>;",
+    "const HTMLBox = () => null;\nconst a = <HTMLBox>t</HTMLBox>;",
   ],
 ];
 
