@@ -11,6 +11,7 @@
     "dictionary.json"
   ],
   "scripts": {
+    "test": "node src/rules/acrocase.test.js",
     "develop": "shovel develop website/app.tsx --platform bun",
     "static": "MODE=production shovel build website/app.tsx --platform bun --lifecycle",
     "predeploy": "npm run static",
@@ -28,7 +29,7 @@
   "author": "Brian Kim",
   "license": "MIT",
   "peerDependencies": {
-    "eslint": ">=8.0.0"
+    "eslint": "^10.8.1"
   },
   "dependencies": {
     "@b9g/cache": "^0.2.2",
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@types/node": "^18.0.0",
+    "@typescript-eslint/parser": "^8.67.0",
     "gh-pages": "^6.3.0",
     "typescript": "^5.0.0"
   },

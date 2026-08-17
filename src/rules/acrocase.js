@@ -12,8 +12,10 @@ function buildAcronymPatterns(acronyms) {
   for (const acronym of acronyms) {
     const titleCase = acronym.charAt(0).toUpperCase() + acronym.slice(1).toLowerCase();
     if (titleCase !== acronym) {
+      // Titlecase at the start of a name is PascalCase (HtmlParser); a
+      // lowercase leading acronym (xmlDoc) never matches the titlecase form.
       patterns.push({
-        pattern: new RegExp(`[a-z]${titleCase}(?=[A-Z]|$|[^a-zA-Z])`, "g"),
+        pattern: new RegExp(`(?<=^|[a-z])${titleCase}(?=[A-Z]|$|[^a-zA-Z])`, "g"),
         acronym,
         titleCase,
       });
@@ -53,7 +55,7 @@ function checkIdentifier(name, acronymPatterns, exceptionPatterns) {
         type: "acronym",
         found: titleCase,
         expected: acronym,
-        index: match.index + 1,
+        index: match.index,
       });
     }
   }
@@ -194,6 +196,10 @@ module.exports = {
       },
       // Method definitions in classes: parseUrl() {}
       "MethodDefinition > Identifier.key"(node) {
+        checkNode(node);
+      },
+      // Class fields: apiUrl = ...
+      "PropertyDefinition > Identifier.key"(node) {
         checkNode(node);
       },
       // TypeScript interface and type declarations
