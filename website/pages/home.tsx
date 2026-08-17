@@ -1,12 +1,13 @@
 import dictionary from "../../dictionary.json";
 
 const acronyms = [...Object.keys(dictionary.acronyms), "ACRO"].sort((a, b) => b.length - a.length);
-const acronymPattern = new RegExp(`(${acronyms.join("|")})`, "g");
+const acronymPattern = new RegExp(`(${acronyms.map((a) => a + "|" + a.toLowerCase()).join("|")})`, "g");
+const acronymSet = new Set(acronyms.flatMap((a) => [a, a.toLowerCase()]));
 
 function Acro({children}: {children: string}) {
 	const parts = children.split(acronymPattern);
 	return <>{parts.map((part) =>
-		acronyms.includes(part) ? <span class="acro">{part}</span> : part
+		acronymSet.has(part) ? <span class="acro">{part}</span> : part
 	)}</>;
 }
 
