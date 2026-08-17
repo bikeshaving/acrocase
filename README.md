@@ -72,7 +72,23 @@ Add project-specific acronyms on top of the built-in dictionary:
 
 ## Auto-fix
 
-The rule is fixable. Run `eslint --fix` to correct violations automatically.
+Run `eslint --fix` to correct violations automatically. A fix renames the
+declaration together with every reference to it, so call sites, JSX tags and
+type annotations stay in sync, and shadowed bindings are each renamed only
+within their own scope.
+
+Two kinds of name are reported but never rewritten automatically, because the
+references that would need to change are not visible to the rule:
+
+- **Named exports.** Importers live in other files, so renaming one would break
+  them silently. These are reported as errors with no fix and no suggestion.
+  A default export is still fixed, since importers pick their own local name.
+- **Properties and methods.** A property can be read as `o.parseUrl` or
+  `o["parseUrl"]` from anywhere, so the rename is offered as an editor
+  suggestion you apply deliberately rather than as an autofix.
+
+Imported names, destructuring keys and computed keys are left alone entirely,
+since those names belong to whoever declared them.
 
 ## Dictionary
 

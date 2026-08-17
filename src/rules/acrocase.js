@@ -99,6 +99,7 @@ module.exports = {
       url: "https://acrocase.org",
     },
     fixable: "code",
+    hasSuggestions: true,
     schema: [
       {
         type: "object",
@@ -117,6 +118,7 @@ module.exports = {
         "Acronym '{{found}}' should be '{{expected}}' in '{{name}}'. Use '{{corrected}}' instead.",
       incorrectException:
         "'{{found}}' should be '{{expected}}' in '{{name}}'. Use '{{corrected}}' instead.",
+      renameMember: "Rename to '{{corrected}}'.",
     },
   },
 
@@ -133,7 +135,88 @@ module.exports = {
     const acronymPatterns = buildAcronymPatterns(acronyms);
     const exceptionPatterns = buildExceptionPatterns(exceptions);
 
-    function checkNode(node) {
+    const sourceCode = context.sourceCode || context.getSourceCode();
+
+    // Every binding the identifier introduces. A class declaration yields two
+    // (the outer binding and the class-body binding), and both must be renamed.
+    function getBindings(node, declaration) {
+      return sourceCode
+        .getDeclaredVariables(declaration)
+        .filter((variable) => variable.identifiers.includes(node));
+    }
+
+    // A named export is part of the module's public API: importers live in
+    // files ESLint is not looking at, so renaming one cannot be done safely as
+    // an autofix. A default export is exempt because importers choose their own
+    // local name, making the declaration's name private after all.
+    function isNamedExport(bindings, declaration) {
+      if (declaration.parent && declaration.parent.type === "ExportNamedDeclaration") {
+        return true;
+      }
+
+      if (
+        declaration.parent &&
+        declaration.parent.type === "VariableDeclaration" &&
+        declaration.parent.parent &&
+        declaration.parent.parent.type === "ExportNamedDeclaration"
+      ) {
+        return true;
+      }
+
+      return bindings.some((variable) =>
+        variable.references.some(
+          (reference) =>
+            reference.identifier.parent &&
+            reference.identifier.parent.type === "ExportSpecifier",
+        ),
+      );
+    }
+
+    // Rename the binding along with every reference to it, so the fix cannot
+    // leave call sites pointing at a name that no longer exists.
+    function renameBinding(fixer, bindings, corrected) {
+      const fixes = [];
+      const seen = new Set();
+
+      function replace(identifier, text) {
+        const key = `${identifier.range[0]}:${identifier.range[1]}`;
+        if (seen.has(key)) {
+          return;
+        }
+        seen.add(key);
+        fixes.push(fixer.replaceText(identifier, text));
+      }
+
+      for (const variable of bindings) {
+        for (const identifier of variable.identifiers) {
+          replace(identifier, corrected);
+        }
+
+        for (const reference of variable.references) {
+          const identifier = reference.identifier;
+          const parent = identifier.parent;
+          // `{ apiUrl }` is shorthand for `{ apiUrl: apiUrl }`. Renaming it in
+          // place would silently change the property key too, so expand it.
+          if (
+            parent &&
+            parent.type === "Property" &&
+            parent.shorthand &&
+            parent.value === identifier
+          ) {
+            replace(identifier, `${identifier.name}: ${corrected}`);
+          } else {
+            replace(identifier, corrected);
+          }
+        }
+      }
+
+      return fixes;
+    }
+
+    // `declaration` is the node that introduces the binding, if any. Without
+    // one the name is a member (a property key or method), whose references we
+    // cannot resolve, so the rename is offered as a suggestion instead of a fix.
+    function checkNode(node, declaration) {
       const name = node.name;
       const violations = checkIdentifier(name, acronymPatterns, exceptionPatterns);
 
@@ -142,9 +225,11 @@ module.exports = {
       }
 
       const corrected = getCorrectedName(name, violations);
+      const bindings = declaration ? getBindings(node, declaration) : [];
+      const exported = bindings.length > 0 && isNamedExport(bindings, declaration);
 
       for (const violation of violations) {
-        context.report({
+        const report = {
           node,
           messageId:
             violation.type === "exception"
@@ -156,10 +241,26 @@ module.exports = {
             name,
             corrected,
           },
-          fix(fixer) {
-            return fixer.replaceText(node, corrected);
-          },
-        });
+        };
+
+        if (exported) {
+          // Importers live in files ESLint is not looking at, so neither a fix
+          // nor a suggestion can be applied safely. Report and leave it alone.
+        } else if (bindings.length > 0) {
+          report.fix = (fixer) => renameBinding(fixer, bindings, corrected);
+        } else {
+          // A member's references cannot be resolved, so offer the rename as a
+          // suggestion the user opts into rather than an autofix.
+          report.suggest = [
+            {
+              messageId: "renameMember",
+              data: { corrected },
+              fix: (fixer) => fixer.replaceText(node, corrected),
+            },
+          ];
+        }
+
+        context.report(report);
       }
     }
 
@@ -167,55 +268,71 @@ module.exports = {
       // Variable declarations: const parseUrl = ...
       VariableDeclarator(node) {
         if (node.id.type === "Identifier") {
-          checkNode(node.id);
+          checkNode(node.id, node);
         }
       },
       // Function declarations and expressions: function parseUrl() {}
       "FunctionDeclaration, FunctionExpression"(node) {
         if (node.id) {
-          checkNode(node.id);
+          checkNode(node.id, node);
         }
       },
       // Function parameters
       "FunctionDeclaration, FunctionExpression, ArrowFunctionExpression"(node) {
         for (const param of node.params) {
           if (param.type === "Identifier") {
-            checkNode(param);
+            checkNode(param, node);
           }
         }
       },
       // Class declarations: class HttpClient {}
       ClassDeclaration(node) {
         if (node.id) {
-          checkNode(node.id);
+          checkNode(node.id, node);
         }
       },
-      // Property definitions in object literals and classes: { parseUrl: ... }
+      // Property definitions in object literals: { parseUrl: ... }
       "Property > Identifier.key"(node) {
+        // Shorthand keys are really references to a binding, which the
+        // declaration visitors already rename. Destructuring keys name a
+        // property someone else declared, so they are not ours to rename.
+        if (
+          node.parent.computed ||
+          node.parent.shorthand ||
+          node.parent.parent.type === "ObjectPattern"
+        ) {
+          return;
+        }
         checkNode(node);
       },
       // Method definitions in classes: parseUrl() {}
       "MethodDefinition > Identifier.key"(node) {
-        checkNode(node);
+        if (!node.parent.computed) {
+          checkNode(node);
+        }
       },
       // Class fields: apiUrl = ...
       "PropertyDefinition > Identifier.key"(node) {
-        checkNode(node);
+        if (!node.parent.computed) {
+          checkNode(node);
+        }
       },
       // TypeScript interface and type declarations
       TSInterfaceDeclaration(node) {
         if (node.id) {
-          checkNode(node.id);
+          checkNode(node.id, node);
         }
       },
       TSTypeAliasDeclaration(node) {
         if (node.id) {
-          checkNode(node.id);
+          checkNode(node.id, node);
         }
       },
       // TypeScript property signatures: { parseUrl: string }
       "TSPropertySignature > Identifier.key"(node) {
-        checkNode(node);
+        if (!node.parent.computed) {
+          checkNode(node);
+        }
       },
     };
   },
