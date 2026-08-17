@@ -350,7 +350,8 @@ export function HomePage() {
   }
 }`}</code></pre>
 					<p>
-						Auto-fixable. Ships with a <a href="https://github.com/brainkim/acrocase/blob/main/dictionary.json">dictionary</a> of
+						Reports without rewriting, like <Acro>ESLint</Acro>'s own naming rules. Ships
+						with a <a href="https://github.com/bikeshaving/acrocase/blob/main/dictionary.json">dictionary</a> of
 						139 acronyms. Extensible:
 					</p>
 					<pre><code>{`{

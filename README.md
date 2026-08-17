@@ -91,7 +91,7 @@ destructuring keys and computed keys.
 
 ## Dictionary
 
-The plugin ships with a [dictionary](https://github.com/brainkim/acrocase/blob/main/dictionary.json) of common acronyms sourced from web platform APIs and general programming. It includes exceptions for abbreviations like `Id` and `Intl` that follow normal casing despite looking like acronyms.
+The plugin ships with a [dictionary](https://github.com/bikeshaving/acrocase/blob/main/dictionary.json) of common acronyms sourced from web platform APIs and general programming. It includes exceptions for abbreviations like `Id` and `Intl` that follow normal casing despite looking like acronyms.
 
 ## License
 
