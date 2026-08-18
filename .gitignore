@@ -1,5 +1,6 @@
 node_modules/
 dist/
+.libuild-test/
 .env
 .env.local
 *.log

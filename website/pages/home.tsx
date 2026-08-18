@@ -344,13 +344,10 @@ export function HomePage() {
 					<h2><Acro>ESLint</Acro> Plugin</h2>
 					<pre><code>{`npm install eslint-plugin-acrocase --save-dev`}</code></pre>
 					<pre><code>{`// eslint.config.js
-import acrocase from "eslint-plugin-acrocase";
+import acrocase from 'eslint-plugin-acrocase';
 
 export default [
-  {
-    plugins: {acrocase},
-    rules: {"acrocase/acrocase": "error"},
-  },
+  { plugins: { acrocase }, rules: { 'acrocase/acrocase': ['error'] } },
 ];`}</code></pre>
 					<p>
 						Reports without rewriting, like <Acro>ESLint</Acro>'s own naming rules. Ships
@@ -359,7 +356,7 @@ export default [
 					</p>
 					<pre><code>{`{
   rules: {
-    "acrocase/acrocase": ["error", {acronyms: ["GCP", "NATS"]}],
+    'acrocase/acrocase': ['error', { acronyms: ['GCP', 'NATS'] }],
   },
 }`}</code></pre>
 

@@ -1,16 +1,46 @@
 {
   "name": "eslint-plugin-acrocase",
   "version": "0.0.1",
-  "description": "ESLint plugin to enforce ACROCase naming conventions",
+  "description": "A single ESLint rule, acrocase/acrocase, that keeps acronyms uppercase in identifiers.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bikeshaving/acrocase.git"
+  },
+  "homepage": "https://acrocase.org",
+  "bugs": {
+    "url": "https://github.com/bikeshaving/acrocase/issues"
+  },
+  "author": "Brian Kim",
   "type": "module",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./index": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./index.js": {
+      "import": "./dist/index.js"
+    },
+    "./dictionary": {
+      "types": "./dist/dictionary.d.ts",
+      "import": "./dist/dictionary.js"
+    },
+    "./package.json": "./dist/package.json"
+  },
   "files": [
-    "dist"
+    "README.md",
+    "LICENSE",
+    "dist/"
   ],
   "scripts": {
+    "test": "libuild test -p node",
     "build": "libuild build",
-    "test": "libuild build && node test/acrocase.test.ts",
+    "typecheck": "tsc --noEmit",
+    "stage": "libuild stage --provenance",
+    "prepublishOnly": "echo 'ERROR: Cannot publish from root directory. Use libuild publish instead.' && exit 1",
     "develop": "shovel develop website/app.tsx --platform bun",
     "static": "MODE=production shovel build website/app.tsx --platform bun --lifecycle",
     "predeploy": "npm run static",
@@ -25,10 +55,9 @@
     "naming-convention",
     "acronyms"
   ],
-  "author": "Brian Kim",
   "license": "MIT",
   "peerDependencies": {
-    "eslint": "^10.8.1"
+    "eslint": ">=9"
   },
   "devDependencies": {
     "@b9g/crank": "^0.7.9",
@@ -37,12 +66,13 @@
     "@b9g/shovel": "^0.2.19",
     "@types/node": "^26.2.0",
     "@typescript-eslint/parser": "^8.67.0",
+    "@typescript-eslint/types": "^8.67.0",
+    "@typescript-eslint/utils": "^8.67.0",
     "eslint": "^10.8.1",
     "gh-pages": "^6.3.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.67.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bikeshaving/acrocase"
-  }
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts"
 }
