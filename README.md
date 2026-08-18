@@ -12,22 +12,31 @@ npm install eslint-plugin-acrocase --save-dev
 
 ## Usage
 
-```json
-{
-  "plugins": ["acrocase"],
-  "rules": {
-    "acrocase/acrocase": "error"
-  }
-}
+In `eslint.config.js`:
+
+```js
+import acrocase from "eslint-plugin-acrocase";
+
+export default [
+  {
+    plugins: {acrocase},
+    rules: {
+      "acrocase/acrocase": "error",
+    },
+  },
+];
 ```
 
-Or use the recommended config:
+Or spread the recommended config, which does the same thing in one line:
 
-```json
-{
-  "extends": ["plugin:acrocase/recommended"]
-}
+```js
+import acrocase from "eslint-plugin-acrocase";
+
+export default [acrocase.configs.recommended];
 ```
+
+The package is ESM-only. A CommonJS `eslint.config.cjs` can still `require()`
+it on Node 20.19+ and 22.12+.
 
 ## What it does
 
@@ -62,11 +71,11 @@ class ApiResponse {}  // APIResponse
 
 Add project-specific acronyms on top of the built-in dictionary:
 
-```json
+```js
 {
-  "acrocase/acrocase": ["error", {
-    "acronyms": ["GCP", "NATS"]
-  }]
+  rules: {
+    "acrocase/acrocase": ["error", {acronyms: ["GCP", "NATS"]}],
+  },
 }
 ```
 
@@ -91,7 +100,7 @@ destructuring keys and computed keys.
 
 ## Dictionary
 
-The plugin ships with a [dictionary](https://github.com/bikeshaving/acrocase/blob/main/dictionary.json) of common acronyms sourced from web platform APIs and general programming. It includes exceptions for abbreviations like `Id` and `Intl` that follow normal casing despite looking like acronyms.
+The plugin ships with a [dictionary](https://github.com/bikeshaving/acrocase/blob/main/src/dictionary.ts) of common acronyms sourced from web platform APIs and general programming. It includes exceptions for abbreviations like `Id` and `Intl` that follow normal casing despite looking like acronyms.
 
 ## License
 

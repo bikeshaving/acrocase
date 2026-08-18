@@ -2,16 +2,15 @@
   "name": "eslint-plugin-acrocase",
   "version": "0.0.1",
   "description": "ESLint plugin to enforce ACROCase naming conventions",
-  "exports": {
-    ".": "./src/index.js",
-    "./dictionary.json": "./dictionary.json"
-  },
+  "type": "module",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "src",
-    "dictionary.json"
+    "dist"
   ],
   "scripts": {
-    "test": "node src/rules/acrocase.test.js",
+    "build": "libuild build",
+    "test": "libuild build && node test/acrocase.test.ts",
     "develop": "shovel develop website/app.tsx --platform bun",
     "static": "MODE=production shovel build website/app.tsx --platform bun --lifecycle",
     "predeploy": "npm run static",
@@ -33,6 +32,7 @@
   },
   "devDependencies": {
     "@b9g/crank": "^0.7.9",
+    "@b9g/libuild": "^0.2.20",
     "@b9g/router": "^0.2.5",
     "@b9g/shovel": "^0.2.19",
     "@types/node": "^26.2.0",

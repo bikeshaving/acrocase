@@ -6,6 +6,8 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "strict": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
@@ -16,6 +18,8 @@
     ]
   },
   "include": [
+    "src/**/*",
+    "test/**/*",
     "website/**/*"
   ],
   "exclude": [

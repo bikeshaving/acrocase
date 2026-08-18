@@ -1,6 +1,9 @@
-const { RuleTester } = require("eslint");
-const tsParser = require("@typescript-eslint/parser");
-const rule = require("./acrocase.js");
+import {RuleTester, Linter} from "eslint";
+import tsParser from "@typescript-eslint/parser";
+import plugin from "../dist/index.js";
+import assert from "node:assert";
+
+const rule = plugin.rules!.acrocase;
 
 const ruleTester = new RuleTester({
   languageOptions: {
@@ -73,11 +76,9 @@ ruleTester.run("acrocase", rule, {
 });
 
 // The rule must not offer a fix or a suggestion for anything it reports.
-const { Linter } = require("eslint");
-const assert = require("assert");
 
 const linter = new Linter();
-const config = [
+const config: Linter.Config[] = [
   {
     files: ["**/*.tsx"],
     languageOptions: {
@@ -91,8 +92,8 @@ const config = [
   },
 ];
 
-assert.ok(!rule.meta.fixable, "rule must not declare itself fixable");
-assert.ok(!rule.meta.hasSuggestions, "rule must not declare suggestions");
+assert.ok(!rule.meta?.fixable, "rule must not declare itself fixable");
+assert.ok(!rule.meta?.hasSuggestions, "rule must not declare suggestions");
 
 const samples = [
   "const parseUrl = 1;\nparseUrl();",

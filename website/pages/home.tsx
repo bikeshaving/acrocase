@@ -1,4 +1,4 @@
-import dictionary from "../../dictionary.json";
+import dictionary from "../../src/dictionary.ts";
 
 const acronyms = [...Object.keys(dictionary.acronyms), "ACRO"].sort((a, b) => b.length - a.length);
 const acronymPattern = new RegExp(`(${acronyms.map((a) => a + "|" + a.toLowerCase()).join("|")})`, "g");
@@ -343,21 +343,19 @@ export function HomePage() {
 
 					<h2><Acro>ESLint</Acro> Plugin</h2>
 					<pre><code>{`npm install eslint-plugin-acrocase --save-dev`}</code></pre>
-					<pre><code>{`{
-  "plugins": ["acrocase"],
-  "rules": {
-    "acrocase/acrocase": "error"
-  }
-}`}</code></pre>
+					<pre><code>{`// eslint.config.js
+import acrocase from "eslint-plugin-acrocase";
+
+export default [acrocase.configs.recommended];`}</code></pre>
 					<p>
 						Reports without rewriting, like <Acro>ESLint</Acro>'s own naming rules. Ships
-						with a <a href="https://github.com/bikeshaving/acrocase/blob/main/dictionary.json">dictionary</a> of
+						with a <a href="https://github.com/bikeshaving/acrocase/blob/main/src/dictionary.ts">dictionary</a> of
 						139 acronyms. Extensible:
 					</p>
 					<pre><code>{`{
-  "acrocase/acrocase": ["error", {
-    "acronyms": ["GCP", "NATS"]
-  }]
+  rules: {
+    "acrocase/acrocase": ["error", {acronyms: ["GCP", "NATS"]}],
+  },
 }`}</code></pre>
 
 					<footer>

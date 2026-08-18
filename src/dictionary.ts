@@ -1,4 +1,6 @@
-{
+// The ACROCase dictionary. Kept as a module rather than JSON because the
+// build externalizes JSON imports, which cannot survive the flattened output.
+export default {
   "description": "ACROCase dictionary of acronyms found in programming and the web platform",
   "acronyms": {
     "ACL": {
@@ -588,4 +590,4 @@
       ]
     }
   }
-}
+} as const;

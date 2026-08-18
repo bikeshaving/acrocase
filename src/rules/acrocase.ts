@@ -2,12 +2,33 @@
  * @fileoverview Enforce ACROCase naming conventions for acronyms
  */
 
-const dictionary = require("../../dictionary.json");
+import type {Rule} from "eslint";
+import type * as ESTree from "estree";
+import dictionary from "../dictionary.ts";
+
+interface AcronymPattern {
+  pattern: RegExp;
+  acronym: string;
+  titleCase: string;
+}
+
+interface ExceptionPattern {
+  pattern: RegExp;
+  incorrect: string;
+  correct: string;
+}
+
+interface Violation {
+  type: "acronym" | "exception";
+  found: string;
+  expected: string;
+  index: number;
+}
 
 // Build regex patterns for detecting incorrectly cased acronyms.
 // For each acronym like "URL", detect the titlecase form "Url".
-function buildAcronymPatterns(acronyms) {
-  const patterns = [];
+function buildAcronymPatterns(acronyms: string[]): AcronymPattern[] {
+  const patterns: AcronymPattern[] = [];
 
   for (const acronym of acronyms) {
     const titleCase = acronym.charAt(0).toUpperCase() + acronym.slice(1).toLowerCase();
@@ -27,8 +48,8 @@ function buildAcronymPatterns(acronyms) {
 
 // Build regex patterns for detecting exception violations.
 // For each exception like "Id", detect the all-caps form "ID".
-function buildExceptionPatterns(exceptions) {
-  const patterns = [];
+function buildExceptionPatterns(exceptions: string[]): ExceptionPattern[] {
+  const patterns: ExceptionPattern[] = [];
 
   for (const correct of exceptions) {
     const incorrect = correct.toUpperCase();
@@ -44,12 +65,16 @@ function buildExceptionPatterns(exceptions) {
   return patterns;
 }
 
-function checkIdentifier(name, acronymPatterns, exceptionPatterns) {
-  const violations = [];
+function checkIdentifier(
+  name: string,
+  acronymPatterns: AcronymPattern[],
+  exceptionPatterns: ExceptionPattern[],
+): Violation[] {
+  const violations: Violation[] = [];
 
   for (const { pattern, acronym, titleCase } of acronymPatterns) {
     pattern.lastIndex = 0;
-    let match;
+    let match: RegExpExecArray | null;
     while ((match = pattern.exec(name)) !== null) {
       violations.push({
         type: "acronym",
@@ -62,7 +87,7 @@ function checkIdentifier(name, acronymPatterns, exceptionPatterns) {
 
   for (const { pattern, incorrect, correct } of exceptionPatterns) {
     pattern.lastIndex = 0;
-    let match;
+    let match: RegExpExecArray | null;
     while ((match = pattern.exec(name)) !== null) {
       violations.push({
         type: "exception",
@@ -76,7 +101,7 @@ function checkIdentifier(name, acronymPatterns, exceptionPatterns) {
   return violations;
 }
 
-function getCorrectedName(name, violations) {
+function getCorrectedName(name: string, violations: Violation[]): string {
   let corrected = name;
   const sorted = [...violations].sort((a, b) => b.index - a.index);
 
@@ -89,12 +114,11 @@ function getCorrectedName(name, violations) {
   return corrected;
 }
 
-module.exports = {
+const rule: Rule.RuleModule = {
   meta: {
     type: "suggestion",
     docs: {
       description: "Enforce ACROCase naming conventions for acronyms",
-      category: "Stylistic Issues",
       recommended: true,
       url: "https://acrocase.org",
     },
@@ -124,8 +148,8 @@ module.exports = {
     },
   },
 
-  create(context) {
-    const options = context.options[0] || {};
+  create(context: Rule.RuleContext) {
+    const options: {acronyms?: string[]} = context.options[0] || {};
 
     const acronyms = Object.keys(dictionary.acronyms);
     if (options.acronyms) {
@@ -137,7 +161,7 @@ module.exports = {
     const acronymPatterns = buildAcronymPatterns(acronyms);
     const exceptionPatterns = buildExceptionPatterns(exceptions);
 
-    function checkNode(node) {
+    function checkNode(node: ESTree.Node & {name: string}) {
       const name = node.name;
       const violations = checkIdentifier(name, acronymPatterns, exceptionPatterns);
 
@@ -172,13 +196,13 @@ module.exports = {
         }
       },
       // Function declarations and expressions: function parseUrl() {}
-      "FunctionDeclaration, FunctionExpression"(node) {
+      "FunctionDeclaration, FunctionExpression"(node: any) {
         if (node.id) {
           checkNode(node.id);
         }
       },
       // Function parameters
-      "FunctionDeclaration, FunctionExpression, ArrowFunctionExpression"(node) {
+      "FunctionDeclaration, FunctionExpression, ArrowFunctionExpression"(node: any) {
         for (const param of node.params) {
           if (param.type === "Identifier") {
             checkNode(param);
@@ -192,7 +216,7 @@ module.exports = {
         }
       },
       // Property definitions in object literals: { parseUrl: ... }
-      "Property > Identifier.key"(node) {
+      "Property > Identifier.key"(node: any) {
         // Shorthand keys are really references to a binding, which the
         // declaration visitors already rename. Destructuring keys name a
         // property someone else declared, so they are not ours to rename.
@@ -206,30 +230,30 @@ module.exports = {
         checkNode(node);
       },
       // Method definitions in classes: parseUrl() {}
-      "MethodDefinition > Identifier.key"(node) {
+      "MethodDefinition > Identifier.key"(node: any) {
         if (!node.parent.computed) {
           checkNode(node);
         }
       },
       // Class fields: apiUrl = ...
-      "PropertyDefinition > Identifier.key"(node) {
+      "PropertyDefinition > Identifier.key"(node: any) {
         if (!node.parent.computed) {
           checkNode(node);
         }
       },
       // TypeScript interface and type declarations
-      TSInterfaceDeclaration(node) {
+      TSInterfaceDeclaration(node: any) {
         if (node.id) {
           checkNode(node.id);
         }
       },
-      TSTypeAliasDeclaration(node) {
+      TSTypeAliasDeclaration(node: any) {
         if (node.id) {
           checkNode(node.id);
         }
       },
       // TypeScript property signatures: { parseUrl: string }
-      "TSPropertySignature > Identifier.key"(node) {
+      "TSPropertySignature > Identifier.key"(node: any) {
         if (!node.parent.computed) {
           checkNode(node);
         }
@@ -237,3 +261,5 @@ module.exports = {
     };
   },
 };
+
+export default rule;
