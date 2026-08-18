@@ -346,7 +346,12 @@ export function HomePage() {
 					<pre><code>{`// eslint.config.js
 import acrocase from "eslint-plugin-acrocase";
 
-export default [acrocase.configs.recommended];`}</code></pre>
+export default [
+  {
+    plugins: {acrocase},
+    rules: {"acrocase/acrocase": "error"},
+  },
+];`}</code></pre>
 					<p>
 						Reports without rewriting, like <Acro>ESLint</Acro>'s own naming rules. Ships
 						with a <a href="https://github.com/bikeshaving/acrocase/blob/main/src/dictionary.ts">dictionary</a> of

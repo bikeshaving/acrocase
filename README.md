@@ -27,13 +27,8 @@ export default [
 ];
 ```
 
-Or spread the recommended config, which does the same thing in one line:
-
-```js
-import acrocase from "eslint-plugin-acrocase";
-
-export default [acrocase.configs.recommended];
-```
+There is one rule, so there is no preset config to extend: the four lines above
+are the whole setup.
 
 The package is ESM-only. A CommonJS `eslint.config.cjs` can still `require()`
 it on Node 20.19+ and 22.12+.

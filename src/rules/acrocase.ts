@@ -119,7 +119,6 @@ const rule: Rule.RuleModule = {
     type: "suggestion",
     docs: {
       description: "Enforce ACROCase naming conventions for acronyms",
-      recommended: true,
       url: "https://acrocase.org",
     },
     // Not fixable, and deliberately so. Renaming an identifier means rewriting
