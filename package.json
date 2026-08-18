@@ -31,18 +31,15 @@
   "peerDependencies": {
     "eslint": "^10.8.1"
   },
-  "dependencies": {
-    "@b9g/cache": "^0.2.2",
-    "@b9g/crank": "^0.7.9",
-    "@b9g/filesystem": "^0.1.11",
-    "@b9g/router": "^0.2.5",
-    "@b9g/shovel": "^0.2.19"
-  },
   "devDependencies": {
-    "@types/node": "^18.0.0",
+    "@b9g/crank": "^0.7.9",
+    "@b9g/router": "^0.2.5",
+    "@b9g/shovel": "^0.2.19",
+    "@types/node": "^26.2.0",
     "@typescript-eslint/parser": "^8.67.0",
+    "eslint": "^10.8.1",
     "gh-pages": "^6.3.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.9.3"
   },
   "repository": {
     "type": "git",
