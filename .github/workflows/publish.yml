@@ -16,6 +16,24 @@ name: Publish
 # from inside this workflow file in this repository. Set the package on
 # npmjs.com to "Require two-factor authentication and disallow tokens" and
 # `npm publish` from a laptop stops working for everyone, including agents.
+#
+# And this workflow cannot make a version live on its own. Its trust grant is
+# `--allow-stage-publish` only, so the most a compromised run can do is upload
+# a candidate to the staging area, where it is visible and rejectable. Shipping
+# is a separate human act, from a laptop, with 2FA:
+#
+#     npm stage list
+#     npm stage download <stage-id>    # inspect the actual tarball
+#     npm stage approve <stage-id>     # or: npm stage reject <stage-id>
+#
+# The grant is created once by a package owner, and names this file. Renaming
+# the file invalidates it:
+#
+#     npm trust github eslint-plugin-acrocase \
+#       --repo bikeshaving/acrocase \
+#       --file publish.yml \
+#       --env npm \
+#       --allow-stage-publish
 
 on:
   release:
@@ -57,10 +75,11 @@ jobs:
             exit 1
           fi
 
-      # `libuild publish` builds and publishes from inside dist/, never the
-      # repository root. That distinction is load-bearing: the root manifest
-      # points `exports` at ./dist paths that only exist after a build, so a
-      # root publish would ship a package that cannot resolve its own entry.
-      # The root `prepublishOnly` script refuses it outright as a second line
-      # of defence; dist/ carries no scripts, so the guard cannot fire here.
-      - run: npx libuild publish
+      # `libuild stage` builds, then runs `npm stage publish` from inside
+      # dist/, never the repository root. That distinction is load-bearing:
+      # the root manifest points `exports` at ./dist paths that only exist
+      # after a build, so a root publish would ship a package that cannot
+      # resolve its own entry. The root `prepublishOnly` script refuses it
+      # outright as a second line of defence; dist/ carries no scripts, so the
+      # guard cannot fire here.
+      - run: npx libuild stage --provenance
