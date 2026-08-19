@@ -175,6 +175,14 @@ const acrocase: TSESLint.RuleModule<MessageId, Options> = {
 
     function check(node: TSESTree.Identifier) {
       const name = node.name;
+
+      // An all-uppercase name is SCREAMING_SNAKE or a bare acronym, not
+      // camelCase or PascalCase, so no casing rule here applies: VALID does
+      // not contain the acronym ID.
+      if (name === name.toUpperCase()) {
+        return;
+      }
+
       const violations = checkIdentifier(
         name,
         acronymPatterns,

@@ -45,6 +45,14 @@ test('reports miscased acronyms through the rule API', () => {
       'const userId = 1;',
       'class Foo { getUserId() {} }',
 
+      // An all-uppercase name is SCREAMING_SNAKE or a bare acronym, where
+      // neither the acronym nor the exception rules apply.
+      'const VALID = 1;',
+      'const IDLE_TIMEOUT = 500;',
+      'const USER_ID = 1;',
+      'const ID = Symbol();',
+      'const HTML_URL = "";',
+
       // Names declared elsewhere are not ours to judge.
       "import { parseUrl } from './m';\nparseUrl();",
       'const { parseUrl } = obj;',
