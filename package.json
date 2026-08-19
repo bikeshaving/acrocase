@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-acrocase",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A single ESLint rule, acrocase/acrocase, that keeps acronyms uppercase in identifiers.",
   "repository": {
     "type": "git",
