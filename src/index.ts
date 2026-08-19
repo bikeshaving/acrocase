@@ -1,6 +1,6 @@
 import type { Rule, ESLint } from 'eslint';
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
-import dictionary from './dictionary.ts';
+import dictionary from './dictionary.json' with { type: 'json' };
 
 type MessageId = 'incorrectAcronym' | 'incorrectException';
 type Options = [{ acronyms?: string[] }?];

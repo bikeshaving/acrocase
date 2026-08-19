@@ -1,4 +1,4 @@
-import dictionary from "../../src/dictionary.ts";
+import dictionary from "../../src/dictionary.json";
 
 const acronyms = [...Object.keys(dictionary.acronyms), "ACRO"].sort((a, b) => b.length - a.length);
 const acronymPattern = new RegExp(`(${acronyms.map((a) => a + "|" + a.toLowerCase()).join("|")})`, "g");
@@ -351,7 +351,7 @@ export default [
 ];`}</code></pre>
 					<p>
 						Reports without rewriting, like <Acro>ESLint</Acro>'s own naming rules. Ships
-						with a <a href="https://github.com/bikeshaving/acrocase/blob/main/src/dictionary.ts">dictionary</a> of
+						with a <a href="https://github.com/bikeshaving/acrocase/blob/main/src/dictionary.json">dictionary</a> of
 						139 acronyms. Extensible:
 					</p>
 					<pre><code>{`{

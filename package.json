@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "@b9g/crank": "^0.7.9",
-    "@b9g/libuild": "^0.2.20",
+    "@b9g/libuild": "^0.2.21",
     "@b9g/router": "^0.2.5",
     "@b9g/shovel": "^0.2.19",
     "@types/node": "^26.2.0",

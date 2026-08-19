@@ -1,0 +1,591 @@
+{
+  "description": "ACROCase dictionary of acronyms found in programming and the web platform",
+  "acronyms": {
+    "ACL": {
+      "expansion": "Access Control List"
+    },
+    "AES": {
+      "expansion": "Advanced Encryption Standard"
+    },
+    "AMD": {
+      "expansion": "Asynchronous Module Definition"
+    },
+    "AMQP": {
+      "expansion": "Advanced Message Queuing Protocol"
+    },
+    "ANSI": {
+      "expansion": "American National Standards Institute"
+    },
+    "API": {
+      "expansion": "Application Programming Interface"
+    },
+    "ARIA": {
+      "expansion": "Accessible Rich Internet Applications",
+      "webPlatform": [
+        "ARIAMixin",
+        "ariaLabel",
+        "ariaHidden"
+      ]
+    },
+    "ASCII": {
+      "expansion": "American Standard Code for Information Interchange"
+    },
+    "AST": {
+      "expansion": "Abstract Syntax Tree"
+    },
+    "AWS": {
+      "expansion": "Amazon Web Services"
+    },
+    "BFS": {
+      "expansion": "Breadth-First Search"
+    },
+    "BYOB": {
+      "expansion": "Bring Your Own Buffer",
+      "webPlatform": [
+        "ReadableStreamBYOBReader",
+        "ReadableStreamBYOBRequest"
+      ]
+    },
+    "CBC": {
+      "expansion": "Cipher Block Chaining"
+    },
+    "CD": {
+      "expansion": "Continuous Delivery"
+    },
+    "CDN": {
+      "expansion": "Content Delivery Network"
+    },
+    "CI": {
+      "expansion": "Continuous Integration"
+    },
+    "CJS": {
+      "expansion": "CommonJS"
+    },
+    "CLI": {
+      "expansion": "Command-Line Interface"
+    },
+    "CLS": {
+      "expansion": "Cumulative Layout Shift"
+    },
+    "CORS": {
+      "expansion": "Cross-Origin Resource Sharing"
+    },
+    "CPU": {
+      "expansion": "Central Processing Unit"
+    },
+    "CRUD": {
+      "expansion": "Create, Read, Update, Delete"
+    },
+    "CSP": {
+      "expansion": "Content Security Policy",
+      "webPlatform": [
+        "CSPViolationReport"
+      ]
+    },
+    "CSRF": {
+      "expansion": "Cross-Site Request Forgery"
+    },
+    "CSS": {
+      "expansion": "Cascading Style Sheets",
+      "webPlatform": [
+        "CSS",
+        "CSSStyleSheet",
+        "CSSRule",
+        "CSSStyleDeclaration"
+      ]
+    },
+    "CSV": {
+      "expansion": "Comma-Separated Values"
+    },
+    "CTR": {
+      "expansion": "Counter Mode"
+    },
+    "DB": {
+      "expansion": "Database",
+      "webPlatform": [
+        "indexedDB"
+      ]
+    },
+    "DFS": {
+      "expansion": "Depth-First Search"
+    },
+    "DNS": {
+      "expansion": "Domain Name System"
+    },
+    "DOM": {
+      "expansion": "Document Object Model",
+      "webPlatform": [
+        "DOMParser",
+        "DOMRect",
+        "DOMMatrix",
+        "DOMTokenList",
+        "DOMException"
+      ]
+    },
+    "DSL": {
+      "expansion": "Domain-Specific Language"
+    },
+    "DTMF": {
+      "expansion": "Dual-Tone Multi-Frequency",
+      "webPlatform": [
+        "RTCDTMFSender",
+        "RTCDTMFToneChangeEvent"
+      ]
+    },
+    "DTO": {
+      "expansion": "Data Transfer Object"
+    },
+    "ECDSA": {
+      "expansion": "Elliptic Curve Digital Signature Algorithm"
+    },
+    "EOF": {
+      "expansion": "End of File"
+    },
+    "ESM": {
+      "expansion": "ECMAScript Module"
+    },
+    "FCP": {
+      "expansion": "First Contentful Paint"
+    },
+    "FIFO": {
+      "expansion": "First In, First Out"
+    },
+    "FPS": {
+      "expansion": "Frames Per Second"
+    },
+    "FS": {
+      "expansion": "File System"
+    },
+    "FTP": {
+      "expansion": "File Transfer Protocol"
+    },
+    "GATT": {
+      "expansion": "Generic Attribute Profile",
+      "webPlatform": [
+        "BluetoothRemoteGATTServer",
+        "BluetoothRemoteGATTService"
+      ]
+    },
+    "GC": {
+      "expansion": "Garbage Collection"
+    },
+    "GCM": {
+      "expansion": "Galois/Counter Mode"
+    },
+    "GCP": {
+      "expansion": "Google Cloud Platform"
+    },
+    "GIF": {
+      "expansion": "Graphics Interchange Format"
+    },
+    "GL": {
+      "expansion": "Graphics Library",
+      "webPlatform": [
+        "WebGLRenderingContext",
+        "GLenum",
+        "GLint",
+        "GLfloat"
+      ]
+    },
+    "GPU": {
+      "expansion": "Graphics Processing Unit",
+      "webPlatform": [
+        "GPU",
+        "GPUDevice",
+        "GPUBuffer",
+        "GPUTexture",
+        "GPUAdapter"
+      ]
+    },
+    "GUI": {
+      "expansion": "Graphical User Interface"
+    },
+    "GUID": {
+      "expansion": "Globally Unique Identifier"
+    },
+    "HDR": {
+      "expansion": "High Dynamic Range"
+    },
+    "HID": {
+      "expansion": "Human Interface Device",
+      "webPlatform": [
+        "HID",
+        "HIDDevice",
+        "HIDConnectionEvent"
+      ]
+    },
+    "HMAC": {
+      "expansion": "Hash-Based Message Authentication Code"
+    },
+    "HTML": {
+      "expansion": "HyperText Markup Language",
+      "webPlatform": [
+        "HTMLElement",
+        "HTMLCollection",
+        "innerHTML",
+        "outerHTML"
+      ]
+    },
+    "HTTP": {
+      "expansion": "HyperText Transfer Protocol"
+    },
+    "HTTPS": {
+      "expansion": "HyperText Transfer Protocol Secure"
+    },
+    "IDB": {
+      "expansion": "IndexedDB",
+      "webPlatform": [
+        "IDBDatabase",
+        "IDBObjectStore",
+        "IDBRequest",
+        "IDBTransaction"
+      ]
+    },
+    "IDE": {
+      "expansion": "Integrated Development Environment"
+    },
+    "IIR": {
+      "expansion": "Infinite Impulse Response",
+      "webPlatform": [
+        "IIRFilterNode"
+      ]
+    },
+    "IMAP": {
+      "expansion": "Internet Message Access Protocol"
+    },
+    "IO": {
+      "expansion": "Input/Output"
+    },
+    "IP": {
+      "expansion": "Internet Protocol"
+    },
+    "IPC": {
+      "expansion": "Inter-Process Communication"
+    },
+    "JPEG": {
+      "expansion": "Joint Photographic Experts Group"
+    },
+    "JSON": {
+      "expansion": "JavaScript Object Notation",
+      "webPlatform": [
+        "JSON",
+        "JSON.parse()",
+        "JSON.stringify()",
+        "toJSON"
+      ]
+    },
+    "JSX": {
+      "expansion": "JavaScript XML"
+    },
+    "JWT": {
+      "expansion": "JSON Web Token"
+    },
+    "LCP": {
+      "expansion": "Largest Contentful Paint"
+    },
+    "LIFO": {
+      "expansion": "Last In, First Out"
+    },
+    "LRU": {
+      "expansion": "Least Recently Used"
+    },
+    "MFA": {
+      "expansion": "Multi-Factor Authentication"
+    },
+    "MIDI": {
+      "expansion": "Musical Instrument Digital Interface",
+      "webPlatform": [
+        "MIDIAccess",
+        "MIDIInput",
+        "MIDIOutput",
+        "MIDIPort"
+      ]
+    },
+    "MIME": {
+      "expansion": "Multipurpose Internet Mail Extensions",
+      "webPlatform": [
+        "MIMEType"
+      ]
+    },
+    "MQTT": {
+      "expansion": "Message Queuing Telemetry Transport"
+    },
+    "NDEF": {
+      "expansion": "NFC Data Exchange Format",
+      "webPlatform": [
+        "NDEFMessage",
+        "NDEFReader",
+        "NDEFRecord"
+      ]
+    },
+    "NFC": {
+      "expansion": "Near-Field Communication"
+    },
+    "NPM": {
+      "expansion": "Node Package Manager"
+    },
+    "OAEP": {
+      "expansion": "Optimal Asymmetric Encryption Padding"
+    },
+    "ORM": {
+      "expansion": "Object-Relational Mapping"
+    },
+    "OS": {
+      "expansion": "Operating System"
+    },
+    "OTP": {
+      "expansion": "One-Time Password",
+      "webPlatform": [
+        "OTPCredential"
+      ]
+    },
+    "PDF": {
+      "expansion": "Portable Document Format"
+    },
+    "PID": {
+      "expansion": "Process Identifier"
+    },
+    "PNG": {
+      "expansion": "Portable Network Graphics"
+    },
+    "POSIX": {
+      "expansion": "Portable Operating System Interface"
+    },
+    "PSS": {
+      "expansion": "Probabilistic Signature Scheme"
+    },
+    "PWA": {
+      "expansion": "Progressive Web App"
+    },
+    "RAM": {
+      "expansion": "Random Access Memory"
+    },
+    "REPL": {
+      "expansion": "Read-Eval-Print Loop"
+    },
+    "REST": {
+      "expansion": "Representational State Transfer"
+    },
+    "RGB": {
+      "expansion": "Red Green Blue"
+    },
+    "RGBA": {
+      "expansion": "Red Green Blue Alpha"
+    },
+    "RPC": {
+      "expansion": "Remote Procedure Call"
+    },
+    "RSA": {
+      "expansion": "Rivest-Shamir-Adleman"
+    },
+    "RSS": {
+      "expansion": "Really Simple Syndication"
+    },
+    "RTC": {
+      "expansion": "Real-Time Communication",
+      "webPlatform": [
+        "RTCPeerConnection",
+        "RTCDataChannel",
+        "RTCSessionDescription"
+      ]
+    },
+    "SAML": {
+      "expansion": "Security Assertion Markup Language"
+    },
+    "SDK": {
+      "expansion": "Software Development Kit"
+    },
+    "SHA": {
+      "expansion": "Secure Hash Algorithm"
+    },
+    "SMTP": {
+      "expansion": "Simple Mail Transfer Protocol"
+    },
+    "SPA": {
+      "expansion": "Single Page Application"
+    },
+    "SQL": {
+      "expansion": "Structured Query Language"
+    },
+    "SSG": {
+      "expansion": "Static Site Generation"
+    },
+    "SSH": {
+      "expansion": "Secure Shell"
+    },
+    "SSL": {
+      "expansion": "Secure Sockets Layer"
+    },
+    "SSO": {
+      "expansion": "Single Sign-On"
+    },
+    "SSR": {
+      "expansion": "Server-Side Rendering"
+    },
+    "SVG": {
+      "expansion": "Scalable Vector Graphics",
+      "webPlatform": [
+        "SVGElement",
+        "SVGPathElement",
+        "SVGRectElement"
+      ]
+    },
+    "TCP": {
+      "expansion": "Transmission Control Protocol"
+    },
+    "TLS": {
+      "expansion": "Transport Layer Security"
+    },
+    "TOML": {
+      "expansion": "Tom's Obvious Minimal Language"
+    },
+    "TOTP": {
+      "expansion": "Time-Based One-Time Password"
+    },
+    "TSV": {
+      "expansion": "Tab-Separated Values"
+    },
+    "TSX": {
+      "expansion": "TypeScript JSX"
+    },
+    "TTL": {
+      "expansion": "Time to Live"
+    },
+    "TTY": {
+      "expansion": "Teletypewriter"
+    },
+    "UA": {
+      "expansion": "User-Agent",
+      "webPlatform": [
+        "NavigatorUAData"
+      ]
+    },
+    "UDP": {
+      "expansion": "User Datagram Protocol"
+    },
+    "UI": {
+      "expansion": "User Interface",
+      "webPlatform": [
+        "UIEvent"
+      ]
+    },
+    "UMD": {
+      "expansion": "Universal Module Definition"
+    },
+    "URI": {
+      "expansion": "Uniform Resource Identifier",
+      "webPlatform": [
+        "encodeURI",
+        "decodeURI",
+        "encodeURIComponent",
+        "decodeURIComponent"
+      ]
+    },
+    "URL": {
+      "expansion": "Uniform Resource Locator",
+      "webPlatform": [
+        "URL",
+        "URLSearchParams",
+        "URLPattern",
+        "createObjectURL"
+      ]
+    },
+    "USB": {
+      "expansion": "Universal Serial Bus",
+      "webPlatform": [
+        "USB",
+        "USBDevice",
+        "USBConfiguration"
+      ]
+    },
+    "UTF": {
+      "expansion": "Unicode Transformation Format"
+    },
+    "UUID": {
+      "expansion": "Universally Unique Identifier",
+      "webPlatform": [
+        "BluetoothUUID"
+      ]
+    },
+    "VM": {
+      "expansion": "Virtual Machine"
+    },
+    "VPN": {
+      "expansion": "Virtual Private Network"
+    },
+    "VR": {
+      "expansion": "Virtual Reality",
+      "webPlatform": [
+        "VRDisplay",
+        "VRPose"
+      ]
+    },
+    "VTT": {
+      "expansion": "Video Text Tracks",
+      "webPlatform": [
+        "VTTCue",
+        "VTTRegion"
+      ]
+    },
+    "WASI": {
+      "expansion": "WebAssembly System Interface"
+    },
+    "WASM": {
+      "expansion": "WebAssembly"
+    },
+    "WEBP": {
+      "expansion": "Web Picture Format"
+    },
+    "XHR": {
+      "expansion": "XMLHttpRequest"
+    },
+    "XML": {
+      "expansion": "Extensible Markup Language",
+      "webPlatform": [
+        "XMLDocument",
+        "XMLSerializer",
+        "XMLHttpRequest"
+      ]
+    },
+    "XR": {
+      "expansion": "Extended Reality",
+      "webPlatform": [
+        "XRSystem",
+        "XRSession",
+        "XRFrame",
+        "XRSpace"
+      ]
+    },
+    "XSLT": {
+      "expansion": "Extensible Stylesheet Language Transformations",
+      "webPlatform": [
+        "XSLTProcessor"
+      ]
+    },
+    "XSS": {
+      "expansion": "Cross-Site Scripting"
+    },
+    "YAML": {
+      "expansion": "YAML Ain't Markup Language"
+    }
+  },
+  "exceptions": {
+    "Id": {
+      "expansion": "Identifier",
+      "webPlatform": [
+        "getElementById",
+        "elementId",
+        "clientId",
+        "requestId"
+      ]
+    },
+    "Intl": {
+      "expansion": "Internationalization",
+      "webPlatform": [
+        "Intl",
+        "Intl.DateTimeFormat",
+        "Intl.NumberFormat"
+      ]
+    }
+  }
+}

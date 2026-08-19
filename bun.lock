@@ -6,7 +6,7 @@
       "name": "acrocase",
       "devDependencies": {
         "@b9g/crank": "^0.7.9",
-        "@b9g/libuild": "^0.2.20",
+        "@b9g/libuild": "^0.2.21",
         "@b9g/router": "^0.2.5",
         "@b9g/shovel": "^0.2.19",
         "@types/node": "^26.2.0",
@@ -36,7 +36,7 @@
 
     "@b9g/http-errors": ["@b9g/http-errors@0.2.1", "", {}, "sha512-jhjE9Y2lPAfIkhcZ9oNqUS2LqwpuDktlfD/qn4Kpnoat23Y4E3PRAS9v/IYHVQP8OMgKxegeyCmVCDg/MMTg2w=="],
 
-    "@b9g/libuild": ["@b9g/libuild@0.2.20", "", { "dependencies": { "@b9g/async-context": "^0.2.1", "commander": "^15.0.0", "esbuild": "^0.28.1", "expect": "^30.4.1", "glob": "^13.0.6", "pretty-format": "^30.4.1" }, "peerDependencies": { "playwright": "^1.40.0", "typescript": "^5.0.0 || ^6.0.0" }, "optionalPeers": ["playwright", "typescript"], "bin": { "libuild": "cli.js" } }, "sha512-Q9PnAQFbZzzTHK6HYx9zYwQ0C75hZv+CHMMCXGlCyGOr7yk44fBiDiruWo2akHQx7gZKwRYGaR25dry94TvyiQ=="],
+    "@b9g/libuild": ["@b9g/libuild@0.2.21", "", { "dependencies": { "@b9g/async-context": "^0.2.1", "commander": "^15.0.0", "esbuild": "^0.28.1", "expect": "^30.4.1", "glob": "^13.0.6", "pretty-format": "^30.4.1" }, "peerDependencies": { "playwright": "^1.40.0", "typescript": "^5.0.0 || ^6.0.0" }, "optionalPeers": ["playwright", "typescript"], "bin": { "libuild": "cli.js" } }, "sha512-QfSarWMImCiyLHUg/fSR8NkW2IvZOF8M5Yli4/QDoCIjC0E8b+ss2SsWd1vhUzomclXJ2K1X4DfRU83hdlY71w=="],
 
     "@b9g/match-pattern": ["@b9g/match-pattern@0.2.1", "", {}, "sha512-K0pQIzdOBA1ssai0jE8/YgVzSUPqO1ursZreTVNb16PGtO4yNCp7DOag/8E2rwAlpkCCIvH41hpRl4D894it/w=="],
 
