@@ -6,10 +6,9 @@ name: Publish
 #   - Publishing a GitHub Release (Releases -> Draft a new release -> Publish)
 #   - Actions -> Publish -> Run workflow
 #
-# The job then waits for approval, because it targets the `npm` environment.
-# Configure that environment in Settings -> Environments with yourself as a
-# required reviewer. GitHub shows a "Review deployments" button and the job
-# stays parked until it is pressed.
+# The job targets the `npm` environment because the trust grant names it, not
+# because the environment carries protection rules. It has none: a staged
+# candidate is inert, so a run needs no approval to produce one.
 #
 # What actually stops an agent is not the button. It is that no npm token
 # exists. This workflow authenticates with OIDC, so publishing is only possible
