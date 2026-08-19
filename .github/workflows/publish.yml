@@ -1,0 +1,66 @@
+name: Publish
+
+# The only way this package reaches npm.
+#
+# Two triggers, both of which are a button a human presses:
+#   - Publishing a GitHub Release (Releases -> Draft a new release -> Publish)
+#   - Actions -> Publish -> Run workflow
+#
+# The job then waits for approval, because it targets the `npm` environment.
+# Configure that environment in Settings -> Environments with yourself as a
+# required reviewer. GitHub shows a "Review deployments" button and the job
+# stays parked until it is pressed.
+#
+# What actually stops an agent is not the button. It is that no npm token
+# exists. This workflow authenticates with OIDC, so publishing is only possible
+# from inside this workflow file in this repository. Set the package on
+# npmjs.com to "Require two-factor authentication and disallow tokens" and
+# `npm publish` from a laptop stops working for everyone, including agents.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      # Trusted publishing needs npm 11.5.1 or later.
+      - run: npm install -g npm@latest
+
+      - run: npm ci || npm install
+
+      - run: npm run typecheck
+      - run: npm test
+
+      # Fails loudly if the tag and the manifest disagree, so a release can
+      # never publish a version nobody named.
+      - name: Check the tag matches the version
+        if: github.event_name == 'release'
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$PKG" ]; then
+            echo "Tag $TAG does not match package version $PKG"
+            exit 1
+          fi
+
+      # `libuild publish` builds and publishes from inside dist/, never the
+      # repository root. That distinction is load-bearing: the root manifest
+      # points `exports` at ./dist paths that only exist after a build, so a
+      # root publish would ship a package that cannot resolve its own entry.
+      # The root `prepublishOnly` script refuses it outright as a second line
+      # of defence; dist/ carries no scripts, so the guard cannot fire here.
+      - run: npx libuild publish
