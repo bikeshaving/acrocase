@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
 
+# bun installs, node runs. The lockfile is bun's, but the tests execute under
+# `libuild test -p node`, so the node version below is the one being exercised.
 jobs:
   test:
     name: tests (node ${{ matrix.node }})
@@ -18,8 +20,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: npm
-      - run: npm ci
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
       - run: npm run typecheck
       - run: npm test
       # The published artifact is built, not the source tree, so a build
@@ -39,8 +41,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
-      - run: npm ci
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
       - run: npm install --no-save eslint@${{ matrix.eslint }}
       - run: npm test
 
@@ -55,7 +57,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-          cache: npm
-      - run: npm ci
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
       - run: npm run build
       - run: node -e "import('./dist/index.js').then(m => { if (Object.keys(m.default.rules).length !== 1) process.exit(1); })"
