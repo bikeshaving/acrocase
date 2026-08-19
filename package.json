@@ -36,7 +36,7 @@
     "build": "libuild build",
     "typecheck": "tsc --noEmit",
     "stage": "libuild stage --provenance",
-    "prepublishOnly": "echo 'ERROR: Cannot publish from root directory. Use libuild publish instead.' && exit 1",
+    "prepublishOnly": "echo 'ERROR: Cannot publish from root directory. Use libuild to publish or stage the package.' && exit 1",
     "develop": "shovel develop website/app.tsx --platform bun",
     "static": "MODE=production shovel build website/app.tsx --platform bun --lifecycle",
     "predeploy": "npm run static",
