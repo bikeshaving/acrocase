@@ -89,11 +89,7 @@ The plugin ships with a
 [dictionary](https://github.com/bikeshaving/acrocase/blob/main/src/dictionary.json)
 of 139 acronyms drawn from web platform APIs and general programming, along
 with the exceptions — `Id`, `Intl` — that take normal casing despite looking
-like acronyms. It is exported, so you can read it directly:
-
-```js
-import dictionary from 'eslint-plugin-acrocase/dictionary';
-```
+like acronyms.
 
 ## Requirements
 

@@ -24,10 +24,6 @@
     "./index.js": {
       "import": "./dist/index.js"
     },
-    "./dictionary": {
-      "types": "./dist/dictionary.d.ts",
-      "import": "./dist/dictionary.js"
-    },
     "./package.json": "./dist/package.json"
   },
   "files": [
